@@ -1,15 +1,12 @@
-# main.tf
-
-terraform {
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "~> 5.0"
-    }
-  }
-}
-
 provider "github" {
   token = var.github_token
 }
 
+resource "aws_ecr_repository" "foo" {
+  name                 = "bar"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}

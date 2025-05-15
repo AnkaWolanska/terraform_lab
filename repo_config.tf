@@ -2,6 +2,7 @@ variable "publicly_visible" {
   description = "Determines whether repository is publicly visible"
   type        = bool
   sensitive   = false
+  default = true
 }
 
 locals {
