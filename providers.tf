@@ -31,10 +31,10 @@ terraform {
 }
 
 provider "aws" {
-   region = var.primary_region
+   region = var.regions[0]
 }
 
 provider "aws" {
   alias  = "secondary"
-  region = var.secondary_region
+  region = var.regions[1]
 }
