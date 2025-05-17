@@ -1,82 +1,26 @@
-resource "random_string" "default_bucket_name_suffix" {
+ resource "random_string" "bucket_name_suffix" {
+  count = length(var.regions)
   length = 16
   special = false
   upper = false
 }
 
-resource "random_string" "secondary_bucket_name_suffix" {
-  length = 16
-  special = false
-  upper = false
+# create us-east-1 bucket using the default provider
+module "default_bucket" {
+  source            = "./modules/s3_bucket"
+  bucket_name_prefix = var.bucket_name_prefix
+  region            = var.regions[0]
+  random_suffix     = random_string.bucket_name_suffix[0].result
 }
-
-# uses default provider configuration
-resource "aws_s3_bucket" "default" {
-  bucket = "terraformissi-${random_string.default_bucket_name_suffix.result}"
-
-  tags = {
-    Name = "default_provider"
+# create us-west-2 bucket using the eu_west_1 provider
+module "secondary_bucket" {
+  source            = "./modules/s3_bucket"
+  # notice how we pass provider alias to the module.
+  providers = {
+    aws = aws.secondary
   }
+  bucket_name_prefix = var.bucket_name_prefix
+  region            = var.regions[1]
+  random_suffix     = random_string.bucket_name_suffix[1].result
+  lifecycle_days = 30 # we can modify the days value if we want
 }
-
-# alias provider specified, it will use its configuration
-resource "aws_s3_bucket" "secondary" {
-  bucket   = "terraformissi-${random_string.secondary_bucket_name_suffix.result}"
-  provider = aws.secondary
-  tags = {
-    Name = "alias_provider"
-  }
-}
-
-resource "aws_s3_bucket_versioning" "default_bucket_versioning" {
-  bucket = aws_s3_bucket.default.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_versioning" "secondary_bucket_versioning" {
-  bucket = aws_s3_bucket.secondary.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "default_bucket_lifecycle_config" {
-  bucket = aws_s3_bucket.default.id
-
-  rule {
-    id     = "transition-to-glacier"
-    status = "Enabled"
-
-    filter {
-      prefix = "logs/"
-    }
-
-    transition {
-      days          = 90
-      storage_class = "GLACIER_IR"
-    }
-  }
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "secondary_bucket_lifecycle_config" {
-  bucket = aws_s3_bucket.secondary.id
-
-  rule {
-    id     = "transition-to-glacier"
-    status = "Enabled"
-
-    filter {
-      prefix = "logs/"
-    }
-
-    transition {
-      days          = 90
-      storage_class = "GLACIER_IR"
-    }
-  }
-}
-

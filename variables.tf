@@ -1,5 +1,3 @@
-# variables.tf
-
 variable "github_token" {
   description = "GitHub Personal Access Token"
   type        = string
@@ -21,6 +19,11 @@ variable "repository_description" {
 variable "regions" {
   description = "Name of the AWS deployment regions"
   type        = list(string)
-  default     = ["us-east-1", "eu-west-1"]
+  default     = ["us-east-1", "us-west-2"]
+}
+
+variable "bucket_name_prefix" {
+  type        = string
+  default     = "terraformissi"
 }
 
