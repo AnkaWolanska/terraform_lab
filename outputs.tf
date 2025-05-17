@@ -13,7 +13,7 @@ output "bucket_arns" {
 
 output "bucket_regions" {
   value = {
-    "${module.default_bucket.bucket_id}"     = var.regions[0],
-    "${module.secondary_bucket.bucket_id}"     = var.regions[1],
+    "${module.default_bucket.bucket_id}"   = var.regions[0],
+    "${module.secondary_bucket.bucket_id}" = var.regions[1],
   }
 }

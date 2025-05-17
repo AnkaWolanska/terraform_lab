@@ -2,11 +2,11 @@ variable "publicly_visible" {
   description = "Determines whether repository is publicly visible"
   type        = bool
   sensitive   = false
-  default = true
+  default     = true
 }
 
 locals {
-   visibility = var.publicly_visible ? "public" : "private"
+  visibility = var.publicly_visible ? "public" : "private"
 }
 
 resource "github_repository" "repo" {

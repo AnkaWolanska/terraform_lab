@@ -1,7 +1,7 @@
 variable "github_token" {
   description = "GitHub Personal Access Token"
   type        = string
-  sensitive   = true # Marks this variable as sensitive, preventing it from appearing in logs and console output
+  sensitive   = true
 }
 
 variable "repository_name" {
@@ -23,7 +23,7 @@ variable "regions" {
 }
 
 variable "bucket_name_prefix" {
-  type        = string
-  default     = "terraformissi"
+  type    = string
+  default = "terraformissi"
 }
 
