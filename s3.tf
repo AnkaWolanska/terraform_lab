@@ -1,16 +1,28 @@
+resource "random_string" "default_bucket_name_suffix" {
+  length = 16
+  special = false
+  upper = false
+}
+
+resource "random_string" "secondary_bucket_name_suffix" {
+  length = 16
+  special = false
+  upper = false
+}
+
 # uses default provider configuration
-resource "aws_s3_bucket" "my_bucket" {
-  bucket = "terraformissi-987654" # replace with your own unique name
+resource "aws_s3_bucket" "default" {
+  bucket = "terraformissi-${random_string.default_bucket_name_suffix.result}" # replace with your own unique name
   tags = {
-    Name = "terraformissi"
+    Name = "default_provider"
   }
 }
 
 # alias provider specified, it will use its configuration
-resource "aws_s3_bucket" "my_bucket_us_west_2" {
-  bucket   = "issiterraform-234567" # replace with your own unique name
-  provider = aws.us_west_2
+resource "aws_s3_bucket" "secondary" {
+  bucket   = "terraformissi-${random_string.secondary_bucket_name_suffix.result}" # replace with your own unique name
+  provider = aws.secondary
   tags = {
-    Name = "issiterraform"
+    Name = "alias_provider"
   }
 }

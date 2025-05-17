@@ -17,3 +17,15 @@ variable "repository_description" {
   type        = string
   default     = "Repository managed by Terraform"
 }
+
+variable "primary_region" {
+  description = "Name of the default AWS deployment region"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "secondary_region" {
+  description = "Name of the secondary AWS deplyment region"
+  type        = string
+  default     = "us-west-2"
+}
